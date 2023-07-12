@@ -29,7 +29,7 @@ namespace back_end.Models
         public bool ChucVu { get; set; }
         #endregion
         public List<NguoiDung> GetAll()
-        {
+        { 
             List<NguoiDung> nguoiDungs = new List<NguoiDung>();
             DataTable dt = cDatabase.GetTable("Select *from NguoiDung");
             for (int i = 0; i < dt.Rows.Count; i++) {
