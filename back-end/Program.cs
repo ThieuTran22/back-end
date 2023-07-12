@@ -33,13 +33,13 @@ app.MapNguoiDungEndpoints();
 
 app.MapThuMucChuDeEndpoints();
 
-/*app.MapBoCauHoiEndpoints();
+app.MapBoCauHoiEndpoints();
 
 app.MapMonHocEndpoints();
 
 app.MapCauHoiEndpoints();
 
 app.MapCauTraLoiEndpoints();
-*/
+
 
 app.Run();
