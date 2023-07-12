@@ -32,7 +32,7 @@ namespace back_end.Models
         public bool DangDuocBan { get; set; }
         #endregion
         public List<BoCauHoi> GetAll()
-        {
+        { 
             List<BoCauHoi> boCauHois = new List<BoCauHoi>();
             DataTable dt = cDatabase.GetTable($"Select *from BoCauHoi");
             for (int i = 0; i < dt.Rows.Count; i++) {
