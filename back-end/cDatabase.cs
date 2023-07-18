@@ -5,7 +5,7 @@ namespace back_end
 {
     public class cDatabase
     {
-        private static string strConn = @"Data Source=THIEU\SQLEXPRESS;Initial Catalog=QuizzSystemFinal;Integrated Security=True";
+        private static string strConn = @"Data Source=DESKTOP-2E5DFBC\SHUUYASQL;Initial Catalog=QuizzSystemFinal;Integrated Security=True";
         private static SqlConnection conn = new SqlConnection(strConn);
         public static void OpenConnect()
         {
