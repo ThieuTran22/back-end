@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Reflection;
 
 namespace back_end.Models
 {
@@ -81,7 +82,18 @@ namespace back_end.Models
             })
             .WithName("GetNguoiDungById");
 
-            routes.MapPut("/api/NguoiDung/{id}", (string taiKhoan, NguoiDung input) => { })
+            routes.MapPut("/api/NguoiDung/{id}", (string taiKhoan, NguoiDung input) => {
+                Console.Write(input.NgaySinh.ToString());
+                try
+                {
+                    cDatabase.ExecuteCMD($"update NguoiDung set HoVaTen=N'{input.HoVaTen}',TenHienThi=N'{input.TenHienThi}', SoDienThoai='{input.SoDienThoai}', MatKhau = '{input.MatKhau}', NgaySinh='{input.NgaySinh.ToString("MM-dd-yyyy")}' where TaiKhoan = '{taiKhoan}'");
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            })
             .WithName("UpdateNguoiDung");
 
             routes.MapPost("/api/NguoiDung", (NguoiDung model) => {
