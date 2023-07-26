@@ -111,6 +111,28 @@ namespace back_end.Models
                         DangDuocBan = (bool)dt.Rows[0][9]);
             return boCauHoi;
         }
+        public List<BoCauHoi> GetAllByName(string name,int maThuMucChuDe)
+        {
+            List<BoCauHoi> boCauHois = new List<BoCauHoi>();
+            DataTable dt = cDatabase.GetTable($"select *from BoCauHoi where TenBoCauHoi Like N'%{name}%' and MaThuMucChuDe={maThuMucChuDe}");
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                boCauHois.Add(
+                    new BoCauHoi(
+                        MaBoCauHoi = (int)dt.Rows[i][0],
+                        TenBoCauHoi = (string)dt.Rows[i][1],
+                        HinhAnh = (string)dt.Rows[i][2],
+                        ThoiGianLamBai = (int)dt.Rows[i][3],
+                        SoDiemDau = (double)dt.Rows[i][4],
+                        GiaBan = (long)dt.Rows[i][5],
+                        GioiThieu = (string)dt.Rows[i][6],
+                        MaMonHoc = (int)dt.Rows[i][7],
+                        MaThuMucChuDe = (int)dt.Rows[i][8],
+                        DangDuocBan = (bool)dt.Rows[i][9]
+               ));
+            }
+            return boCauHois;
+        }
     }
 
 
@@ -128,6 +150,12 @@ namespace back_end.Models
                 return new BoCauHoi().GetAllDangDuocBan();
             })
             .WithName("GetAllBoCauHoisDangDuocBan");
+
+            routes.MapGet("/api/BoCauHoi/searchname/{name}/{maThuMucChuDe}", (string name,int maThuMucChuDe) => {
+                return new BoCauHoi().GetAllByName(name,maThuMucChuDe);
+            })
+            .WithName("GetAllBoCauHoiByName");
+
 
 
             routes.MapGet("/api/BoCauHoi/{id}", (int id) => {
