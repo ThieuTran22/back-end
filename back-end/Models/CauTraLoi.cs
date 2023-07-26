@@ -100,7 +100,7 @@ namespace back_end.Models
             .WithName("CreateCauTraLoi");
 
             routes.MapDelete("/api/CauTraLoi/{id}", (int id) => {
-                //return Results.Ok(new CauTraLoi { ID = id });
+                cDatabase.ExecuteCMD($"delete from CauTraLoi where MaCauTraLoi=" + id);
             })
             .WithName("DeleteCauTraLoi");
         }
