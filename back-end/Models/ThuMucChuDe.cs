@@ -45,6 +45,23 @@ namespace back_end.Models
             }
             return thuMucChuDes;
         }
+
+
+        public List<ThuMucChuDe> GetAllByName(string name, string TaiKhoan)
+        {
+            List<ThuMucChuDe> thuMucChuDes = new List<ThuMucChuDe>();
+            DataTable dt = cDatabase.GetTable($"select * from ThuMucChuDe where TenThuMucChuDe like N'%{name}%' and TaiKhoan = '{TaiKhoan}'");
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                thuMucChuDes.Add(
+                    new ThuMucChuDe(
+                        MaThuMucChuDe = (int)dt.Rows[i][0],
+                        TenThuMucChuDe = (string)dt.Rows[i][1],
+                        TaiKhoan = (string)dt.Rows[i][2]
+               ));
+            }
+            return thuMucChuDes;
+        }
         public ThuMucChuDe GetById()
         {
             DataTable dt = cDatabase.GetTable("select *from ThuMucChuDe where MaThuMucChuDe = " + MaThuMucChuDe);
@@ -92,6 +109,13 @@ namespace back_end.Models
                 return true;
             })
             .WithName("CreateThuMucChuDe");
+
+
+
+              routes.MapGet("/api/ThuMucChuDe/searchThuMuc/{name}/{TaiKhoan}", (string name, string TaiKhoan) => {
+                  return new ThuMucChuDe().GetAllByName(name, TaiKhoan);
+              })
+            .WithName("GetThuMucByName");
 
             routes.MapDelete("/api/ThuMucChuDe/{id}", (int id) => {
                 cDatabase.ExecuteCMD($"delete ThuMucChuDe where MaThuMucChuDe ='{id}'");
