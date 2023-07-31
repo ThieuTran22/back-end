@@ -31,6 +31,7 @@ namespace back_end.Models
         public int MaThuMucChuDe { get; set; }
         public bool DangDuocBan { get; set; }
         #endregion
+
         public List<BoCauHoi> GetAll()
         {                 
             List<BoCauHoi> boCauHois = new List<BoCauHoi>();
@@ -114,7 +115,7 @@ namespace back_end.Models
         public List<BoCauHoi> GetAllByName(string name,int maThuMucChuDe)
         {
             List<BoCauHoi> boCauHois = new List<BoCauHoi>();
-            DataTable dt = cDatabase.GetTable($"select *from BoCauHoi where TenBoCauHoi Like N'%{name}%' and MaThuMucChuDe={maThuMucChuDe}");
+            DataTable dt = cDatabase.GetTable($"select *from BoCauHoi where TenBoCauHoi COLLATE Latin1_General_CI_AI Like N'%{name}%' and MaThuMucChuDe={maThuMucChuDe}");
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 boCauHois.Add(
