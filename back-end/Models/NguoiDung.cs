@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Reflection;
 
 namespace back_end.Models
 {
@@ -30,7 +29,7 @@ namespace back_end.Models
         public bool ChucVu { get; set; }
         #endregion
         public List<NguoiDung> GetAll()
-        { 
+        {
             List<NguoiDung> nguoiDungs = new List<NguoiDung>();
             DataTable dt = cDatabase.GetTable("Select *from NguoiDung");
             for (int i = 0; i < dt.Rows.Count; i++) {
@@ -83,13 +82,10 @@ namespace back_end.Models
             .WithName("GetNguoiDungById");
 
             routes.MapPut("/api/NguoiDung/{id}", (string taiKhoan, NguoiDung input) => {
-                Console.Write(input.NgaySinh.ToString());
-                try
-                {
-                    cDatabase.ExecuteCMD($"update NguoiDung set HoVaTen=N'{input.HoVaTen}',TenHienThi=N'{input.TenHienThi}', SoDienThoai='{input.SoDienThoai}', MatKhau = '{input.MatKhau}', NgaySinh='{input.NgaySinh.ToString("MM-dd-yyyy")}' where TaiKhoan = '{taiKhoan}'");
-                }
-                catch (Exception)
-                {
+                try {
+
+                    cDatabase.ExecuteCMD($"update NguoiDung set HoVaTen=N'{input.HoVaTen}',TenHienThi=N'{input.TenHienThi}', SoDienThoai='{input.SoDienThoai}', MatKhau = '{BCrypt.Net.BCrypt.HashPassword(input.MatKhau, BCrypt.Net.BCrypt.GenerateSalt())}', NgaySinh='{input.NgaySinh.ToString("MM-dd-yyyy")}' where TaiKhoan = '{taiKhoan}'");
+                } catch (Exception) {
 
                     throw;
                 }
@@ -99,7 +95,7 @@ namespace back_end.Models
             routes.MapPost("/api/NguoiDung", (NguoiDung model) => {
                 try {
                     cDatabase.ExecuteCMD("insert into NguoiDung(TaiKhoan,MatKhau,HoVaTen,TenHienThi,SoDienThoai,NgaySinh,SoDu,ChucVu) " +
-                    $"values('{model.TaiKhoan}','{model.MatKhau}',N'{model.HoVaTen}',N'{model.TenHienThi}','{model.SoDienThoai}'," +
+                    $"values('{model.TaiKhoan}','{BCrypt.Net.BCrypt.HashPassword(model.MatKhau, BCrypt.Net.BCrypt.GenerateSalt())}',N'{model.HoVaTen}',N'{model.TenHienThi}','{model.SoDienThoai}'," +
                     $"'{model.NgaySinh.ToString("MM-dd-yyyy")}',{model.SoDu},'{model.ChucVu}')");
                 } catch (Exception e) {
                     Console.WriteLine(e);
@@ -115,10 +111,13 @@ namespace back_end.Models
             .WithName("DeleteNguoiDung");
 
             routes.MapPost("/api/NguoiDung/CheckLogin", (string taiKhoan, string matKhau) => {
-                DataTable db = cDatabase.GetTable($"select *from NguoiDung where taikhoan='{taiKhoan}' and matkhau='{matKhau}'");
-                if (db.Rows.Count == 0)
-                    return false;
-                return true;
+
+                DataTable db = cDatabase.GetTable($"select *from NguoiDung where taikhoan='{taiKhoan}'");
+                if (db.Rows.Count == 0) return false;
+
+                // Kiểm tra mật khẩu
+                bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(matKhau, db.Rows[0][1].ToString()!);
+                return isPasswordCorrect;
             })
             .WithName("CheckLogin");
         }
